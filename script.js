@@ -11,13 +11,47 @@ class RouteCard extends HTMLElement {
         const clima = this.getAttribute('clima');
 
         this.shadowRoot.innerHTML = `
+            <style>
+                .tarjeta-ruta {
+                    background-color: white;
+                    border-left: 5px solid #3498db;
+                    border-radius: 8px;
+                    padding: 15px;
+                    width: 280px;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                    font-family: Arial, sans-serif;
+                }
+                h3 {
+                    margin-top: 0;
+                    color: #2c3e50;
+                    font-size: 18px;
+                }
+                p {
+                    margin: 8px 0;
+                    color: #555;
+                    font-size: 14px;
+                }
+                .btn-eliminar {
+                    margin-top: 15px;
+                    padding: 8px;
+                    background-color: #e74c3c;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    width: 100%;
+                    font-weight: bold;
+                }
+                .btn-eliminar:hover {
+                    background-color: #c0392b;
+                }
+            </style>
             <div class="tarjeta-ruta">
                 <h3>Ruta: ${ruta}</h3>
                 <p>Conductor: ${conductor}</p>
                 <p>Salida: ${hora}</p>
-                <p><strong>Clima actual:</strong> ${clima}</p>
+                <p><strong>Clima:</strong> ${clima}</p>
                 <button class="btn-eliminar">Eliminar Ruta</button>
-                <hr>
             </div>
         `;
 
