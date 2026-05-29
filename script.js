@@ -97,3 +97,30 @@ formulario.addEventListener('submit', async (e) => {
     contenedor.appendChild(nuevaTarjeta);
     formulario.reset();
 });
+//agregar funcionalidad de filtro
+const formularioFiltro = document.getElementById('form-ruta-filtro');
+formularioFiltro.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const nombreRutaFiltro = document.getElementById('nombre-ruta-filtro').value.toLowerCase();
+    const conductorFiltro = document.getElementById('conductor-filtro').value.toLowerCase();
+    const estudiantesFiltro = parseInt(document.getElementById('estudiantes-filtro').value);
+    const horaSalidaFiltro = document.getElementById('hora-salida-filtro').value;
+    const tarjetas = contenedor.querySelectorAll('route-card');
+
+    tarjetas.forEach(tarjeta => {
+        const ruta = tarjeta.getAttribute('ruta').toLowerCase();
+        const conductor = tarjeta.getAttribute('conductor').toLowerCase();
+        const hora = tarjeta.getAttribute('hora');
+        const estudiantes = parseInt(tarjeta.getAttribute('estudiantes')) || 0;
+        const listaEstudiantes = tarjeta.getAttribute('estudiantes') ? tarjeta.getAttribute('estudiantes').split(',') : [];
+
+
+
+        const coincideRuta = ruta.includes(nombreRutaFiltro);
+        const coincideConductor = conductor.includes(conductorFiltro);
+        const coincideEstudiantes = estudiantesFiltro ? estudiantes >= estudiantesFiltro : true;
+        const coincideHora = horaSalidaFiltro ? hora >= horaSalidaFiltro : true; 
+
+        if (coincideRuta && coincideConductor && coincideEstudiantes && coincideHora) {
+            tarjeta.style.display = 'block';

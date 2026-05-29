@@ -76,3 +76,26 @@ button[type="submit"]:hover {
         flex: 1;
     }
 }
+/// "estilos para el formulario filtro"
+#form-ruta-filtro {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    max-width: 500px;
+    margin: 0 auto 30px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+@media (min-width: 1024px) {
+    #form-ruta-filtro {
+        max-width: 800px;
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    #form-ruta-filtro input, #form-ruta-filtro button[type="submit"] {
+        flex: 1;
+    }
+}
