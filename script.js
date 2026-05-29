@@ -5,8 +5,10 @@ class RouteCard extends HTMLElement {
     }
 
     connectedCallback() {
+        const id = this.getAttribute('id-ruta');
         const ruta = this.getAttribute('ruta');
         const conductor = this.getAttribute('conductor');
+        const estudiantes = this.getAttribute('estudiantes');
         const hora = this.getAttribute('hora');
         const clima = this.getAttribute('clima');
 
@@ -49,6 +51,7 @@ class RouteCard extends HTMLElement {
             <div class="tarjeta-ruta">
                 <h3>Ruta: ${ruta}</h3>
                 <p>Conductor: ${conductor}</p>
+                <p><strong>Estudiantes:</strong> ${estudiantes}</p>
                 <p>Salida: ${hora}</p>
                 <p><strong>Clima:</strong> ${clima}</p>
                 <button class="btn-eliminar">Eliminar Ruta</button>
@@ -56,6 +59,7 @@ class RouteCard extends HTMLElement {
         `;
 
         this.shadowRoot.querySelector('.btn-eliminar').addEventListener('click', () => {
+            eliminarRutaDeMemoria(id);
             this.remove();
         });
     }
@@ -65,6 +69,8 @@ customElements.define('route-card', RouteCard);
 
 const formulario = document.getElementById('form-ruta');
 const contenedor = document.getElementById('contenedor-rutas');
+
+let listaRutas = JSON.parse(localStorage.getItem('rutas_escolares')) || [];
 
 async function obtenerClima() {
     try {
@@ -78,22 +84,49 @@ async function obtenerClima() {
     }
 }
 
+function renderizarRutas() {
+    contenedor.innerHTML = '';
+    listaRutas.forEach(ruta => {
+        const nuevaTarjeta = document.createElement('route-card');
+        nuevaTarjeta.setAttribute('id-ruta', ruta.id);
+        nuevaTarjeta.setAttribute('ruta', ruta.nombre);
+        nuevaTarjeta.setAttribute('conductor', ruta.conductor);
+        nuevaTarjeta.setAttribute('estudiantes', ruta.estudiantes);
+        nuevaTarjeta.setAttribute('hora', ruta.hora);
+        nuevaTarjeta.setAttribute('clima', ruta.clima);
+        contenedor.appendChild(nuevaTarjeta);
+    });
+}
+
+function eliminarRutaDeMemoria(id) {
+    listaRutas = listaRutas.filter(ruta => ruta.id !== Number(id));
+    localStorage.setItem('rutas_escolares', JSON.stringify(listaRutas));
+}
+
 formulario.addEventListener('submit', async (e) => {
     e.preventDefault(); 
 
-    const ruta = document.getElementById('nombre-ruta').value;
+    const nombre = document.getElementById('nombre-ruta').value;
     const conductor = document.getElementById('conductor').value;
+    const estudiantes = document.getElementById('estudiantes-ruta').value;
     const hora = document.getElementById('hora-salida').value;
 
     const infoClima = await obtenerClima();
 
-    const nuevaTarjeta = document.createElement('route-card');
-    
-    nuevaTarjeta.setAttribute('ruta', ruta);
-    nuevaTarjeta.setAttribute('conductor', conductor);
-    nuevaTarjeta.setAttribute('hora', hora);
-    nuevaTarjeta.setAttribute('clima', infoClima);
+    const nuevaRuta = {
+        id: Date.now(),
+        nombre: nombre,
+        conductor: conductor,
+        estudiantes: estudiantes,
+        hora: hora,
+        clima: infoClima
+    };
 
-    contenedor.appendChild(nuevaTarjeta);
+    listaRutas.push(nuevaRuta);
+    localStorage.setItem('rutas_escolares', JSON.stringify(listaRutas));
+    
+    renderizarRutas();
     formulario.reset();
 });
+
+renderizarRutas();
